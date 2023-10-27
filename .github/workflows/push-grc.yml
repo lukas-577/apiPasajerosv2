@@ -59,9 +59,15 @@ jobs:
       env:
         KUBECONFIG: $HOME/.kube/config
 
-    - name: Configure kubectl with GitHub Secret
+    - name: Debug GKE context
       run: |
-        echo -n "${{ secrets.KUBE_CONFIG }}" | base64 -d --ignore-garbage > $HOME/.kube/config
+        echo "Before context setup:"
+        kubectl config get-contexts
+        gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} --zone ${{ secrets.GKE_ZONE }}
+        kubectl config use-context gke_${{ secrets.GCP_PROJECT }}_${{ secrets.GKE_ZONE }}_${{ secrets.GKE_CLUSTER }}
+        echo "After context setup:"
+        kubectl config get-contexts
+      
       
       
 
