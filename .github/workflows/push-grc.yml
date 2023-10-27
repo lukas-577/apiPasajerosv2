@@ -59,9 +59,7 @@ jobs:
         gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet
         grep "digest: sha256:" <<< $(gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet)
     
-    - name: Configure kubectl to use the gcloud command-line tool as a credential helper for authentication
-      run: |-
-        gcloud --quiet auth configure-kubectl
+
 
 
     - name: Deploy
