@@ -50,12 +50,7 @@ jobs:
       run: |-
         gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet
         grep "digest: sha256:" <<< $(gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet)
-    
-    - name: Install gke-gcloud-auth-plugin
-      run: gcloud components install kubectl
-      
-
-    
+   
     - name: Configurar kubectl
       run: gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} --zone ${{ secrets.GKE_ZONE }} --project ${{ secrets.GCP_PROJECT }}
       
