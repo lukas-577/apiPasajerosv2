@@ -53,8 +53,8 @@ jobs:
     
     - name: Configure kubectl with cluster credentials
       run: |
-        gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
-        kubectl config use-context gke_${{ secrets.GCP_PROJECT }}_${{ env.GKE_ZONE }}_${{ env.GKE_CLUSTER }}
+        gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} --zone ${{ secrets.GKE_ZONE }}
+        kubectl config use-context gke_${{ secrets.GCP_PROJECT }}_${{ secrets.GKE_ZONE }}_${{ secrets.GKE_CLUSTER }}
       env:
         KUBECONFIG: $HOME/.kube/config
 
