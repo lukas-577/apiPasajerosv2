@@ -60,7 +60,7 @@ jobs:
         KUBECONFIG: $HOME/.kube/config
 
 
-    - name: Debug kubectl configuration
+    - name: Debug kubectl configurations
       run: kubectl config view
 
     - name: Deploy
