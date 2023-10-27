@@ -1,19 +1,11 @@
 # more details this workflow and other at https://github.com/didier-durand/gcloud-tests
 name: Push image to Cloud Registry
 
-on:  
-
-  workflow_dispatch:
-  
-
-  push:
-    #protection to avoid triggering when other workflow is modified
-    paths: 
-    - '!.github/workflows/**'
-    - '.github/workflows/push-grc.yml'
-    
-  schedule:
-    - cron:  '0 2 * * MON' 
+on:
+    push:
+      branches: [ "main" ]
+    pull_request:
+      branches: [ "main" ]
 
 env:
   GCP_VERBOSITY: warning
