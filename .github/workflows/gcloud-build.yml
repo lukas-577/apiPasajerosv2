@@ -58,5 +58,29 @@ jobs:
         export BUILD_ID=$(gcloud builds list --limit=1 --format="value(id)" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet)
         gcloud builds describe $BUILD_ID --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet
         grep "$BUILD_ID" <<< $(gcloud builds describe $BUILD_ID --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet)
+
+#comienza el push
+
+    - name: Push docker image to GCR
+      run: |-
+        docker push "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA"
+
+    - name: Describe pushed GCR image
+      run: |-
+        gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet
+        grep "digest: sha256:" <<< $(gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet)
+
+    - name: Deploy
+      run: |-
+        cd deploy/k8s
+        kubectl apply -f deployment.yaml  # Ejecutar el comando de despliegue
+
+    - name: Start Service
+      run: |-
+        cd deploy/k8s
+        kubectl apply -f services.yaml  # Aplicar la configuración del servicio
+      
+    
+          
         
         
