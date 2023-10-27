@@ -17,7 +17,7 @@ on:
 
 env:
   GCP_VERBOSITY: warning
-  GCR_IMAGE: test-alpine ${{ github.repository }}
+  GCR_IMAGE: test-alpine
 
   GCB_DIR: docker
 
