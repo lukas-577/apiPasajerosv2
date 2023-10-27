@@ -1,30 +1,28 @@
-
-name: Cloud Build for Docker image
+# more details this workflow and other at https://github.com/didier-durand/gcloud-tests
+name: Push image to Cloud Registry
 
 on:  
 
   workflow_dispatch:
-    
+  
 
   push:
     #protection to avoid triggering when other workflow is modified
     paths: 
     - '!.github/workflows/**'
-    - '.github/workflows/gcloud-build.yml'
+    - '.github/workflows/push-to-gcr.yml'
     
   schedule:
-    - cron:  '30 2 * * MON' #es el horario programado
+    - cron:  '0 2 * * MON' 
 
 env:
   GCP_VERBOSITY: warning
-  GCR_IMAGE: test-alpine
-
-  GCB_DIR: .
+  GCR_IMAGE: gcr-alpine
 
 jobs:
-  build-on-Google-Cloud-Build:
+  push-to-GCR:
   
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
 
     steps:
         
@@ -44,23 +42,6 @@ jobs:
         echo '--- gcloud info ---'
         gcloud info --anonymize
         
-    - name: Build image 
-      run: |-
-        gcloud builds submit $GCB_DIR --tag="gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --timeout=5m --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet
-        
-    - name: List builds
-      run: |-
-        gcloud builds list --limit=3 --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet
-        
-    - name: Describe last build
-      run: |-
-        #just obtain the build id in text format
-        export BUILD_ID=$(gcloud builds list --limit=1 --format="value(id)" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet)
-        gcloud builds describe $BUILD_ID --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet
-        grep "$BUILD_ID" <<< $(gcloud builds describe $BUILD_ID --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet)
-
-#comienza el push
-
     - name: Configure Docker to use the gcloud command-line tool as a credential helper for authentication
       run: |-
         gcloud --quiet auth configure-docker
@@ -77,18 +58,4 @@ jobs:
       run: |-
         gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet
         grep "digest: sha256:" <<< $(gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet)
-        
-    - name: Deploy
-      run: |-
-        cd deploy/k8s
-        kubectl apply -f deployment.yaml  # Ejecutar el comando de despliegue
-
-    - name: Start Service
-      run: |-
-        cd deploy/k8s
-        kubectl apply -f services.yaml  # Aplicar la configuración del servicio
-      
-    
-          
-        
         
