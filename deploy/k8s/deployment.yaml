@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: golang-service
-        image: gcr.io/annular-form-401215/api-pasajeros:v3
+        image: gcr.io/annular-form-401215/api-pasajeros:v4
         ports:
-        - containerPort: 8080
+        - containerPort: 8888
