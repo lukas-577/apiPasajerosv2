@@ -16,7 +16,7 @@ on:
 
 env:
   GCP_VERBOSITY: warning
-  GCR_IMAGE: gcr-alpine-${{ github.repository }}-${{ github.sha }}
+  GCR_IMAGE: gcr-alpine
 
 jobs:
   push-to-GCR:
