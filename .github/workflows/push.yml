@@ -47,7 +47,7 @@ jobs:
         
     - name: Build the alpine-based docker image
       run: |-
-        docker build . --file Dockerfile.gcreg -t "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA"
+        docker build . --file annular-form-401215_cloudbuild/source/Dockerfile.gcreg -t "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA"
       
     - name: Push docker image to GCR
       run: |-
