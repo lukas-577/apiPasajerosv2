@@ -10,7 +10,7 @@ on:
     #protection to avoid triggering when other workflow is modified
     paths: 
     - '!.github/workflows/**'
-    - '.github/workflows/push-to-gcr.yml'
+    - '.github/workflows/push-grc.yml'
     
   schedule:
     - cron:  '0 2 * * MON' 
@@ -58,4 +58,13 @@ jobs:
       run: |-
         gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet
         grep "digest: sha256:" <<< $(gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet)
-        
+    
+    - name: Deploy
+      run: |-
+        cd deploy/k8s
+        kubectl apply -f deployment.yaml  # Ejecutar el comando de despliegue
+
+    - name: Start Service
+      run: |-
+        cd deploy/k8s
+        kubectl apply -f services.yaml  # Aplicar la configuración del servicio        
