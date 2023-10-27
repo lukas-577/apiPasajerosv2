@@ -59,8 +59,9 @@ jobs:
       env:
         KUBECONFIG: $HOME/.kube/config
 
- 
 
+    - name: Debug kubectl configuration
+      run: kubectl config view
 
     - name: Deploy
       run: |-
