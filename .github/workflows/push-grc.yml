@@ -59,6 +59,9 @@ jobs:
       env:
         KUBECONFIG: $HOME/.kube/config
 
+    - name: Configure kubectl with GitHub Secret
+      run: |
+        echo ${{ secrets.KUBE_CONFIG }} | base64 --decode > $HOME/.kube/config
 
     - name: Debug kubectl configurations
       run: kubectl config view
