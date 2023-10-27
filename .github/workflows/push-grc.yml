@@ -68,24 +68,17 @@ jobs:
         echo "After context setup:"
         kubectl config get-contexts
       
-    - name: Set up GCP credentials
-      run: |
-        echo ${{ secrets.GCP_SA_KEY }} > gcp-key.json
-        gcloud auth activate-service-account --key-file=gcp-key.json
-    - name: Configure kubectl with GitHub Secret
-      run: |
-        echo -n "${{ secrets.KUBE_CONFIG }}" | base64 -d > $HOME/.kube/config
-    - name: Deploy
-      run: |
-        cd deploy/k8s
-        kubectl apply -f deployment.yaml
+
       
       
 
     - name: Debug kubectl configurations
       run: kubectl config view
 
-
+    - name: Deploy
+      run: |
+        cd deploy/k8s/
+        kubectl apply -f deployment.yaml
 
     - name: Start Service
       run: |-
