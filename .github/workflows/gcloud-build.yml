@@ -19,7 +19,7 @@ env:
   GCP_VERBOSITY: warning
   GCR_IMAGE: test-alpine
 
-  GCB_DIR: docker
+  GCB_DIR: .
 
 jobs:
   build-on-Google-Cloud-Build:
