@@ -51,12 +51,16 @@ jobs:
         gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet
         grep "digest: sha256:" <<< $(gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet)
     
-    - name: Configure kubectl with cluster credentials
-      run: |
-        gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} --zone ${{ secrets.GKE_ZONE }}
-        kubectl config use-context gke_${{ secrets.GCP_PROJECT }}_${{ secrets.GKE_ZONE }}_${{ secrets.GKE_CLUSTER }}
-      env:
-        KUBECONFIG: $HOME/.kube/config
+    - name: Configurar kubectl
+      run: gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} --zone ${{ secrets.GKE_ZONE }} --project ${{ secrets.GCP_PROJECT }}
+      
+
+    # - name: Configure kubectl with cluster credentials
+    #   run: |
+    #     gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} --zone ${{ secrets.GKE_ZONE }}
+    #     kubectl config use-context gke_${{ secrets.GCP_PROJECT }}_${{ secrets.GKE_ZONE }}_${{ secrets.GKE_CLUSTER }}
+    #   env:
+    #     KUBECONFIG: $HOME/.kube/config
 
  
 
