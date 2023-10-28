@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: golang-service
-        image: gcr.io/annular-form-401215/gcr-alpine:v6
+        image: gcr.io/annular-form-401215/{IMAGEN_TAG}:{GITHUB_SHA}
         ports:
         - containerPort: 8888
