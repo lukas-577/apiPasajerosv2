@@ -10,6 +10,7 @@ on:
 env:
   GCP_VERBOSITY: warning
   GCR_IMAGE: gcr-alpine
+  IMAGE_TAG: $GCR_IMAGE 
 
 jobs:
   push-to-GCR:
@@ -76,6 +77,7 @@ jobs:
 
     - name: Deploy
       run: |
+        sed -i "s~{IMAGE_TAG}~" deploy/k8s/deployment.yaml
         cd deploy/k8s/
         kubectl apply -f deployment.yaml
 
