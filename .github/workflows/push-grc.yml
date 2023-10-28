@@ -52,6 +52,14 @@ jobs:
         grep "digest: sha256:" <<< $(gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet)
    
 
+    - name: Verify and install gke-gcloud-auth-plugin
+      run: |
+        if ! gcloud components list --filter=NAME:gke-gcloud-auth-plugin | grep -q "Installed"; then
+          echo "gke-gcloud-auth-plugin not installed. Installing..."
+          gcloud components install gke-gcloud-auth-plugin
+        fi
+      
+
     - name: Set USE_GKE_GCLOUD_AUTH_PLUGIN
       run: echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $GITHUB_ENV
 
