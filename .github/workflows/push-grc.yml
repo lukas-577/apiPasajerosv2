@@ -66,7 +66,7 @@ jobs:
       env:
         GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT }}
       run: |
-        gcloud container clusters get-credentials ${{ secrets.GCP_PROJECT }} --region ${{ secrets.GKE_ZONE }}
+        gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} --region ${{ secrets.GKE_ZONE }}
         sed -i "s/GOOGLE_PROJECT/$GCP_PROJECT/g" deploy/k8s/ingress.yaml
         kubectl apply -f deploy/k8s/ingress.yaml
 
