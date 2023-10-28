@@ -82,4 +82,4 @@ jobs:
     - name: Start Service
       run: |-
         cd deploy/k8s
-        kubectl apply -f services.yaml  # Aplicar la configuración del servicio        
+        kubectl apply -f service.yaml  # Aplicar la configuración del servicio        
