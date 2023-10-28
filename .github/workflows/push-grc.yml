@@ -26,6 +26,17 @@ jobs:
     
       with:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+
+
+
+    - name: install the gcloud cli
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ secrets.GCP_PROJECT }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        install_components: 'gke-gcloud-auth-plugin'
+        export_default_credentials: true 
         
     - name: Get gcloud version & info
       run: |-
@@ -51,13 +62,14 @@ jobs:
         gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet
         grep "digest: sha256:" <<< $(gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet)
 
-
-
-    - name: Configure kubectl contexto
-      run: |
-        kubectl config use-context gke_annular-form-401215_us-central1_hello-cluster
+    - name: deploy to gke
       env:
-        KUBECONFIG: $HOME/.kube/config
+        GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT }}
+      run: |
+        gcloud container clusters get-credentials ${{ secrets.GCP_PROJECT }} --region ${{ secrets.GKE_ZONE }}
+        sed -i "s/GOOGLE_PROJECT/$GCP_PROJECT/g" deploy/k8s/ingress.yaml
+        kubectl apply -f deploy/k8s/ingress.yaml
+
 
     - name: Debug kubectl configurations
       run: kubectl config view
