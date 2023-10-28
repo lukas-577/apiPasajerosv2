@@ -52,6 +52,10 @@ jobs:
         grep "digest: sha256:" <<< $(gcloud container images describe "gcr.io/${{ secrets.GCP_PROJECT }}/$GCR_IMAGE:$GITHUB_SHA" --verbosity=$GCP_VERBOSITY --project=${{ secrets.GCP_PROJECT }} --quiet)
    
 
+    - name: Set USE_GKE_GCLOUD_AUTH_PLUGIN
+      run: echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $GITHUB_ENV
+
+
     - name: Configure kubectl with cluster credentials
       run: |
         gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} --zone ${{ secrets.GKE_ZONE }}
@@ -59,25 +63,11 @@ jobs:
       env:
         KUBECONFIG: $HOME/.kube/config
 
-    - name: Debug GKE context
-      run: |
-        echo "Before context setup:"
-        kubectl config get-contexts
-        gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} --zone ${{ secrets.GKE_ZONE }}
-        kubectl config use-context gke_${{ secrets.GCP_PROJECT }}_${{ secrets.GKE_ZONE }}_${{ secrets.GKE_CLUSTER }}
-        echo "After context setup:"
-        kubectl config get-contexts
+
       
 
-    - name: Set up kubectl
-      env:  # Define las variables de entorno
-        GKE_CLUSTER_NAME: ${{ secrets.GKE_CLUSTER }}
-        GKE_PROJECT_ID: ${{ secrets.GCP_PROJECT }}
-        GKE_ZONE: ${{ secrets.GKE_ZONE }}
-      run: |
-        gcloud auth activate-service-account --key-file=${{ secrets.GCP_SA_KEY }}
-        gcloud container clusters get-credentials $GKE_CLUSTER_NAME --zone=$GKE_ZONE --project=$GKE_PROJECT_ID
-        kubectl config use-context CONTEXT_NAME
+
+
             
       
 
