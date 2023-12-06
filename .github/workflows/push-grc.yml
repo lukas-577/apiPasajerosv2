@@ -7,6 +7,7 @@ on:
     pull_request:
       branches: [ "main" ]
 
+      
 env:
   GCP_VERBOSITY: warning
   GCR_IMAGE: gcr-alpine
