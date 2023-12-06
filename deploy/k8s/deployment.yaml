@@ -15,6 +15,15 @@ spec:
     spec:
       containers:
       - name: golang-service
-        image: gcr.io/annular-form-401215/gcr-alpine:{GITHUB_SHA}
+        image: gcr.io/celtic-shape-407219/gcr-alpine:{GITHUB_SHA}
         ports:
         - containerPort: 8888
+        resources:
+          # You must specify requests for CPU to autoscale
+          # based on CPU utilization
+          limits:
+            cpu: 50m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 128Mi
