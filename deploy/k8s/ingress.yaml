@@ -22,4 +22,4 @@ spec:
   tls:
   - hosts:
     - prueba.lumonidy.studio
-    secretName: golang-service-secret
+    secretName: golang-secret
